@@ -336,7 +336,10 @@ async function updation() {
 
 }
 
-
+app.get("/",function(req,res){
+if(err) throw err;
+res.send('SERVER STARTED')
+})
 
 app.get("/search", async function (req, res) {
 
