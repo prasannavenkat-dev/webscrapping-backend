@@ -440,6 +440,6 @@ app.get('/lastUpdate', async function (req, res) {
 
 
 
-app.listen(PORT||3000, function () {
+app.listen(process.env.PORT||3000, function () {
     console.log('server started');
 })
