@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-<<<<<<< HEAD
+
 // // Add Access Control Allow Origin headers
 // app.use((req, res, next) => {
 //     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -42,18 +42,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     );
 //     next();
 //   });
-=======
-// Add Access Control Allow Origin headers
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin","*");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    next();
-  });
 
->>>>>>> bb7ff3a3764c26816892efae763d9ca3d9c87c2b
+// Add Access Control Allow Origin headers
+// app.use((req, res, next) => {
+//     res.setHeader("Access-Control-Allow-Origin","*");
+//     res.header(
+//       "Access-Control-Allow-Headers",
+//       "Origin, X-Requested-With, Content-Type, Accept"
+//     );
+//     next();
+//   });
+
+
 
 
   app.use((req, res, next) => {
