@@ -32,17 +32,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-
-// // Add Access Control Allow Origin headers
-// app.use((req, res, next) => {
-//     res.setHeader("Access-Control-Allow-Origin", "*");
-//     res.header(
-//       "Access-Control-Allow-Headers",
-//       "Origin, X-Requested-With, Content-Type, Accept"
-//     );
-//     next();
-//   });
-
 // Add Access Control Allow Origin headers
 // app.use((req, res, next) => {
 //     res.setHeader("Access-Control-Allow-Origin","*");
@@ -55,12 +44,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-
-  app.use((req, res, next) => {
+app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store')
     next()
   })
-
 
 
 let obj = [{
@@ -120,7 +107,7 @@ setIntervalAsync(async () => {
     console.log(hour);
     if (hour === 1) {
         hour = 0;
-      
+
         try {
             console.log('flag =', flag++);
             for (j = 0; j < obj.length; j++) {
@@ -221,8 +208,15 @@ setIntervalAsync(async () => {
                                 image = $('img[id="landingImage"]').attr('src').trim();
                                 finalPrice = $('span[id="priceblock_ourprice"]').text();
 
+
+
                                 if (finalPrice === "") {
                                     finalPrice = $('span[class="a-size-base a-color-price"]').text()
+
+
+
+
+
                                 }
 
 
@@ -327,11 +321,7 @@ setIntervalAsync(async () => {
     }
 
 
-<<<<<<< HEAD
-}, 60 *.25 * 1000)
-=======
 }, 60 *60* 1000*12)
->>>>>>> bb7ff3a3764c26816892efae763d9ca3d9c87c2b
 
 
 async function updation() {
