@@ -32,6 +32,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+<<<<<<< HEAD
 // // Add Access Control Allow Origin headers
 // app.use((req, res, next) => {
 //     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -41,6 +42,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     );
 //     next();
 //   });
+=======
+// Add Access Control Allow Origin headers
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin","*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    next();
+  });
+
+>>>>>>> bb7ff3a3764c26816892efae763d9ca3d9c87c2b
 
 
   app.use((req, res, next) => {
@@ -105,7 +118,7 @@ setIntervalAsync(async () => {
 
     hour++;
     console.log(hour);
-    if (hour === 12) {
+    if (hour === 1) {
         hour = 0;
       
         try {
@@ -314,7 +327,11 @@ setIntervalAsync(async () => {
     }
 
 
+<<<<<<< HEAD
 }, 60 *.25 * 1000)
+=======
+}, 60 *60* 1000*12)
+>>>>>>> bb7ff3a3764c26816892efae763d9ca3d9c87c2b
 
 
 async function updation() {
