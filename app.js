@@ -321,7 +321,7 @@ setIntervalAsync(async () => {
     }
 
 
-}, 60 *60* 1000)
+}, 60 *.30* 1000)
 
 
 async function updation() {
