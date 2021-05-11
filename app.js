@@ -105,7 +105,7 @@ setIntervalAsync(async () => {
 
     hour++;
     console.log(hour);
-    if (hour === 12) {
+    if (hour === 24) {
         hour = 0;
 
         try {
@@ -321,7 +321,7 @@ setIntervalAsync(async () => {
     }
 
 
-}, 60 *.30* 1000)
+}, 60 *30* 1000)
 
 
 async function updation() {
