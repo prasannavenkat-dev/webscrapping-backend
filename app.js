@@ -33,6 +33,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+<<<<<<< HEAD
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin","*");
@@ -44,13 +45,24 @@ app.use((req, res, next) => {
   });
 
 
+=======
+// Add Access Control Allow Origin headers
+// app.use((req, res, next) => {
+//     res.setHeader("Access-Control-Allow-Origin","*");
+//     res.header(
+//       "Access-Control-Allow-Headers",
+//       "Origin, X-Requested-With, Content-Type, Accept"
+//     );
+//     next();
+//   });
+
+>>>>>>> 4614124393bc050e3293df554857664048b75f49
 
 
-  app.use((req, res, next) => {
+app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store')
     next()
   })
-
 
 
 let obj = [{
