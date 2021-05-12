@@ -95,7 +95,7 @@ let hour = 0;
 
 
 
-const job = cron.schedule('*/1 * * * *', async() => {
+const job = cron.schedule('* */1 * * *', async() => {
 
     try {
         console.log('flag =', flag++);
