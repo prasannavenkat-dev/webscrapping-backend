@@ -13,6 +13,7 @@ const { response } = require('express');
 
 
 
+var cron = require('node-cron');
 
 const mongodb = require("mongodb");
 
@@ -32,18 +33,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-<<<<<<< HEAD
-// // Add Access Control Allow Origin headers
-// app.use((req, res, next) => {
-//     res.setHeader("Access-Control-Allow-Origin", "*");
-//     res.header(
-//       "Access-Control-Allow-Headers",
-//       "Origin, X-Requested-With, Content-Type, Accept"
-//     );
-//     next();
-//   });
-=======
-// Add Access Control Allow Origin headers
+
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin","*");
     res.header(
@@ -53,7 +43,7 @@ app.use((req, res, next) => {
     next();
   });
 
->>>>>>> bb7ff3a3764c26816892efae763d9ca3d9c87c2b
+
 
 
   app.use((req, res, next) => {
@@ -114,224 +104,218 @@ let obj = [{
 
 let flag = 0;
 let hour = 0;
-setIntervalAsync(async () => {
-
-    hour++;
-    console.log(hour);
-    if (hour === 1) {
-        hour = 0;
-      
-        try {
-            console.log('flag =', flag++);
-            for (j = 0; j < obj.length; j++) {
-
-                let limit = obj[j].links
-                let storeName = obj[j].store
-
-                for (i = 0; i < limit.length; i++) {
-                    let product_id = i + 1;
-
-                    (async () => {
-
-                        try {
-                            const response = await request({
-
-                                uri: obj[j].links[i],
-                                headers: {
-
-                                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                                    "accept-encoding": "gzip, deflate, br",
-                                    "accept-language": "en-US,en;q=0.9"
-                                },
-                                gzip: true
-
-                            })
-                            let $ = cheerio.load(response);
-
-                            let title;
-                            let image;
-                            let finalPrice;
-                            let rating;
 
 
-                            if (storeName === "Snapdeal") {
 
-                                title = $('div[class="col-xs-22"] > h1').text().trim();
-                                image = $('img[slidenum="0"]').attr('src').trim();
-                                finalPrice = $('span[class="pdp-final-price"] >span ').text();
+const job = cron.schedule('*/1 * * * *', async() => {
+
+    try {
+        console.log('flag =', flag++);
+        for (j = 0; j < obj.length; j++) {
+
+            let limit = obj[j].links
+            let storeName = obj[j].store
+
+            for (i = 0; i < limit.length; i++) {
+                let product_id = i + 1;
+
+                (async () => {
+
+                    try {
+                        const response = await request({
+
+                            uri: obj[j].links[i],
+                            headers: {
+
+                                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                                "accept-encoding": "gzip, deflate, br",
+                                "accept-language": "en-US,en;q=0.9"
+                            },
+                            gzip: true
+
+                        })
+                        let $ = cheerio.load(response);
+
+                        let title;
+                        let image;
+                        let finalPrice;
+                        let rating;
 
 
-                                if (finalPrice) {
-                                    let digit = finalPrice.length - 3
-                                    let arr2 = finalPrice.slice(digit, finalPrice.length)
-                                    let temp = finalPrice;
-                                    finalPrice = ""
-                                    for (i = 0; i < digit; i++) {
-                                        finalPrice += temp[i]
+                        if (storeName === "Snapdeal") {
 
-                                    }
-                                    finalPrice = finalPrice + "," + arr2
+                            title = $('div[class="col-xs-22"] > h1').text().trim();
+                            image = $('img[slidenum="0"]').attr('src').trim();
+                            finalPrice = $('span[class="pdp-final-price"] >span ').text();
+
+
+                            if (finalPrice) {
+                                let digit = finalPrice.length - 3
+                                let arr2 = finalPrice.slice(digit, finalPrice.length)
+                                let temp = finalPrice;
+                                finalPrice = ""
+                                for (i = 0; i < digit; i++) {
+                                    finalPrice += temp[i]
+
                                 }
+                                finalPrice = finalPrice + "," + arr2
+                            }
 
-                                else {
-                                    finalPrice = "Not Available"
-                                }
-
-
-
-
-                                rating = $('div[class="filled-stars"] ').attr('style');
+                            else {
+                                finalPrice = "Not Available"
+                            }
 
 
 
-                                if (rating) {
-                                    rating = rating.slice(6, 10)
-                                    if (rating !== "0.0%") {
-                                        rating = (rating * 5) / 100
-                                        rating = rating.toString();
-                                    }
-                                    else {
-                                        rating = "0"
-                                    }
+
+                            rating = $('div[class="filled-stars"] ').attr('style');
+
+
+
+                            if (rating) {
+                                rating = rating.slice(6, 10)
+                                if (rating !== "0.0%") {
+                                    rating = (rating * 5) / 100
+                                    rating = rating.toString();
                                 }
                                 else {
-                                    rating = "Not Available"
+                                    rating = "0"
                                 }
-
-
                             }
-                            else if (storeName === "Flipkart") {
-
-
-                                title = $('h1[class="yhB1nd"] > span').text().trim();
-                                image = $('div[class="CXW8mj _3nMexc"] > img').attr('src');
-                                finalPrice = $('div[class="_30jeq3 _16Jk6d"]').text();
-
-
-
-                                rating = $('div[class="_3LWZlK"]').text();
-                                finalPrice = finalPrice.slice(1, 10)
-                                rating = rating.slice(0, 3)
-
+                            else {
+                                rating = "Not Available"
                             }
-                            else if (storeName === "Amazon") {
 
 
-                                title = $('span[id="productTitle"]').text().trim();
-                                image = $('img[id="landingImage"]').attr('src').trim();
-                                finalPrice = $('span[id="priceblock_ourprice"]').text();
-
-                                if (finalPrice === "") {
-                                    finalPrice = $('span[class="a-size-base a-color-price"]').text()
-                                }
+                        }
+                        else if (storeName === "Flipkart") {
 
 
-                                finalPrice = finalPrice.split(".")
-                                finalPrice = finalPrice[0]
-                                finalPrice = finalPrice.slice(1, finalPrice.length)
-                                finalPrice = finalPrice.trim()
+                            title = $('h1[class="yhB1nd"] > span').text().trim();
+                            image = $('div[class="CXW8mj _3nMexc"] > img').attr('src');
+                            finalPrice = $('div[class="_30jeq3 _16Jk6d"]').text();
 
 
 
+                            rating = $('div[class="_3LWZlK"]').text();
+                            finalPrice = finalPrice.slice(1, 10)
+                            rating = rating.slice(0, 3)
+
+                        }
+                        else if (storeName === "Amazon") {
 
 
-                                rating = $('span[class="a-icon-alt"]').text();
-                                rating = rating.slice(0, 3)
+                            title = $('span[id="productTitle"]').text().trim();
+                            image = $('img[id="landingImage"]').attr('src').trim();
+                            finalPrice = $('span[id="priceblock_ourprice"]').text();
 
+                            if (finalPrice === "") {
+                                finalPrice = $('span[class="a-size-base a-color-price"]').text()
                             }
-                            loader();
 
-                            async function loader() {
-                                try {
 
-                                    let clientInfo = await mongoClient.connect(dbUrl)
-                                    let db = clientInfo.db("ecommerce-scrap");
-                                    let uniqueID = storeName + "_" + title
+                            finalPrice = finalPrice.split(".")
+                            finalPrice = finalPrice[0]
+                            finalPrice = finalPrice.slice(1, finalPrice.length)
+                            finalPrice = finalPrice.trim()
 
 
 
-                                    let existorNot = await db.collection("products").find({ _id: uniqueID }).toArray()
-                                    if (existorNot.length) {
-                                        await db.collection("products").updateOne(
-                                            { _id: uniqueID },
-                                            {
-                                                $set: {
-                                                    storeName,
-                                                    title,
-                                                    image,
-                                                    finalPrice,
-                                                    rating,
-                                                    product_id
-                                                }
-                                            }
 
-                                        )
 
-                                        console.log("updated", existorNot[0]._id);
+                            rating = $('span[class="a-icon-alt"]').text();
+                            rating = rating.slice(0, 3)
 
-                                    }
-                                    else if (existorNot.length === 0) {
+                        }
+                        loader();
 
-                                        if (title) {
-                                            await db.collection("products").insertOne({
-                                                _id: uniqueID,
+                        async function loader() {
+                            try {
+
+                                let clientInfo = await mongoClient.connect(dbUrl)
+                                let db = clientInfo.db("ecommerce-scrap");
+                                let uniqueID = storeName + "_" + title
+
+
+
+                                let existorNot = await db.collection("products").find({ _id: uniqueID }).toArray()
+                                if (existorNot.length) {
+                                    await db.collection("products").updateOne(
+                                        { _id: uniqueID },
+                                        {
+                                            $set: {
                                                 storeName,
                                                 title,
                                                 image,
                                                 finalPrice,
                                                 rating,
                                                 product_id
-                                            }, function (err) {
-                                                if (err) throw err;
-                                                console.log('inserted');
-                                            })
-
+                                            }
                                         }
 
+                                    )
+
+                                    console.log("updated", existorNot[0]._id);
+
+                                }
+                                else if (existorNot.length === 0) {
+
+                                    if (title) {
+                                        await db.collection("products").insertOne({
+                                            _id: uniqueID,
+                                            storeName,
+                                            title,
+                                            image,
+                                            finalPrice,
+                                            rating,
+                                            product_id
+                                        }, function (err) {
+                                            if (err) throw err;
+                                            console.log('inserted');
+                                        })
 
                                     }
-                                    else {
-                                        console.log("problem", existorNot);
-                                    }
-
-
-
-                                    clientInfo.close()
-
 
 
                                 }
-                                catch (error) {
-                                    console.log(error);
+                                else {
+                                    console.log("problem", existorNot);
                                 }
 
+
+
+                                clientInfo.close()
+
+
+
+                            }
+                            catch (error) {
+                                console.log(error);
                             }
 
                         }
-                        catch (error) {
-                            console.log("error scrapping", error);
-                        }
 
-                    })();
-                }
+                    }
+                    catch (error) {
+                        console.log("error scrapping", error);
+                    }
 
+                })();
             }
 
-            updation();
+        }
+
+        updation();
 
 
-        }
-        catch (error) {
-            console.log('error interval', error);
-        }
     }
+    catch (error) {
+        console.log('error interval', error);
+    }
+})
 
 
-<<<<<<< HEAD
-}, 60 *.25 * 1000)
-=======
-}, 60 *60* 1000*12)
->>>>>>> bb7ff3a3764c26816892efae763d9ca3d9c87c2b
+
 
 
 async function updation() {
@@ -416,7 +400,6 @@ app.post('/searchmobile', async function (req, res) {
         let res2 = res1[0].product_id;
 
         let fres = await db.collection('products').find({ product_id: res2 }).toArray()
-
         clientInfo.close();
         res.send(fres)
 
@@ -433,8 +416,6 @@ app.post('/searchmobile', async function (req, res) {
 app.get("/showAll", async function (req, res) {
 
     try {
-
-
         let clientInfo = await mongoClient.connect(dbUrl)
         let db = clientInfo.db("ecommerce-scrap");
         let res1 = await db.collection('products').find().sort({ product_id: -1 }).toArray();
